@@ -11,7 +11,7 @@ It logs in, applies a date range, clicks **VIEW**, extracts rows, parses them, a
 
 ## Requirements
 
-- Ruby 3.1+
+- Ruby 4.0+
 - Bundler
 - Node.js + npm (Playwright CLI/driver)
 
