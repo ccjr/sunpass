@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'dotenv/load'
-require_relative '../lib/sunpass'
+require 'sunpass'
 
 def log(message)
   puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
