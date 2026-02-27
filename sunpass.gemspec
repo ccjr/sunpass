@@ -11,9 +11,7 @@ Gem::Specification.new do |spec|
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 4.0'
 
-  spec.files = Dir.chdir(__dir__) do
-    `git ls-files -z`.split("\x0").reject { |f| f.start_with?('test/', 'spec/', '.github/') }
-  end
+  spec.files = Dir.glob('{lib,bin}/**/*').select { |f| File.file?(f) } + %w[sunpass.gemspec README.md]
   spec.bindir = 'bin'
   spec.executables = ['fetch_transactions']
   spec.require_paths = ['lib']
