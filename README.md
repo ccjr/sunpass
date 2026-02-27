@@ -41,6 +41,20 @@ It logs in, applies a date range, clicks **VIEW**, extracts rows, parses them, a
    bundle exec ruby bin/fetch_transactions
    ```
 
+## Use From Another Project
+
+Add this to the other project's `Gemfile`:
+
+```ruby
+gem 'sunpass', path: '../sunpass'
+```
+
+Then run `bundle install` in that project and require with:
+
+```ruby
+require 'sunpass'
+```
+
 ## Output
 
 - SQLite DB file: `db/sunpass.sqlite3`
