@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.name = 'sunpass'
   spec.version = Sunpass::VERSION
   spec.authors = ['SunPass Automation Contributors']
-  spec.summary = 'Automate SunPass transaction retrieval and persistence'
-  spec.description = 'Automates SunPass UI login/transaction extraction, normalizes rows, and persists records into SQLite.'
+  spec.summary = 'Fetch SunPass transactions and transponders through the web UI'
+  spec.description = 'Automates SunPass UI login and extracts transaction and transponder data into Ruby objects.'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 4.0'
 
@@ -17,8 +17,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'playwright-ruby-client', '~> 1.44'
-  spec.add_dependency 'sequel', '~> 5.80'
-  spec.add_dependency 'sqlite3', '~> 1.7'
   spec.add_dependency 'json', '~> 2.7'
   spec.add_dependency 'dotenv', '~> 3.1'
 end

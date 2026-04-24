@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'bundler/setup'
 require 'dotenv/load'
-require 'sunpass'
+require 'json'
+require_relative '../lib/sunpass'
 
 def log(message)
   puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
@@ -13,6 +15,8 @@ password = ENV['SUNPASS_PASSWORD']
 headless = ENV.fetch('SUNPASS_HEADLESS', 'true') == 'true'
 login_url = ENV.fetch('SUNPASS_LOGIN_URL', Sunpass::Client::LOGIN_URL_DEFAULT)
 transactions_url = ENV.fetch('SUNPASS_TRANSACTIONS_URL', Sunpass::Client::TRANSACTIONS_URL_DEFAULT)
+transponders_url = ENV['SUNPASS_TRANSPONDERS_URL']&.strip
+transponders_url = nil if transponders_url.to_s.empty?
 lookback_days = ENV.fetch('SUNPASS_LOOKBACK_DAYS', '30').to_i
 from_date = ENV['SUNPASS_FROM_DATE']
 to_date = ENV['SUNPASS_TO_DATE']
@@ -28,25 +32,27 @@ client = Sunpass::Client.new(
   headless: headless,
   login_url: login_url,
   transactions_url: transactions_url,
+  transponders_url: transponders_url,
   logger: method(:log)
 )
-parser = Sunpass::TransactionParser.new
-store = Sunpass::Store.new
 
 log('Starting fetch pipeline')
-raw_rows = client.fetch_transactions(
+transactions = client.fetch_transactions(
   lookback_days: lookback_days,
   from_date: from_date,
   to_date: to_date
 )
-log("Raw rows fetched: #{raw_rows.size}")
-log('Parsing transaction rows')
-parsed = parser.parse_rows(raw_rows)
-log("Parsed rows: #{parsed.size}")
-log('Persisting parsed rows')
-inserted = store.upsert_transactions(parsed)
-log("Inserted rows: #{inserted}")
+log("Transactions fetched: #{transactions.size}")
 
-puts "Fetched rows: #{raw_rows.size}"
-puts "Parsed rows:  #{parsed.size}"
-puts "Inserted:     #{inserted}"
+result = {
+  transactions: transactions.map(&:to_h)
+}
+
+if transponders_url
+  log('Fetching transponders')
+  transponders = client.fetch_transponders
+  log("Transponders fetched: #{transponders.size}")
+  result[:transponders] = transponders.map(&:to_h)
+end
+
+puts JSON.pretty_generate(result)

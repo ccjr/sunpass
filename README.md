@@ -1,7 +1,7 @@
-# SunPass Transaction Scraper (Ruby)
+# SunPass Data Client (Ruby)
 
-Headless Ruby scraper for SunPass transaction activity.
-It logs in, applies a date range, clicks **VIEW**, extracts rows, parses them, and persists into SQLite.
+Headless Ruby client for SunPass account data.
+It logs in, applies a transaction date range, extracts rows from the UI, and returns `Sunpass::Transaction` and `Sunpass::Transponder` objects.
 
 ## Important
 
@@ -35,7 +35,7 @@ It logs in, applies a date range, clicks **VIEW**, extracts rows, parses them, a
    cp .env.example .env
    ```
 
-4. Run importer:
+4. Run the fetcher:
 
    ```bash
    bundle exec ruby bin/fetch_transactions
@@ -55,11 +55,23 @@ Then run `bundle install` in that project and require with:
 require 'sunpass'
 ```
 
-## Output
+## Library API
 
-- SQLite DB file: `db/sunpass.sqlite3`
-- Table: `transactions`
-- De-duplication key: `external_id`
+```ruby
+require 'sunpass'
+
+client = Sunpass::Client.new(
+  username: ENV.fetch('SUNPASS_USERNAME'),
+  password: ENV.fetch('SUNPASS_PASSWORD')
+)
+
+transactions = client.fetch_transactions(from_date: '03/01/2023', to_date: '03/31/2023')
+transponders = client.fetch_transponders
+```
+
+`fetch_transactions` returns `Array<Sunpass::Transaction>`.
+
+`fetch_transponders` returns `Array<Sunpass::Transponder>` and defaults to the SunPass tags-and-vehicles page.
 
 ## Environment Variables
 
@@ -72,13 +84,14 @@ require 'sunpass'
 - `SUNPASS_FROM_DATE` (`MM/DD/YYYY`, optional explicit start)
 - `SUNPASS_TO_DATE` (`MM/DD/YYYY`, optional explicit end)
 - `SUNPASS_LOOKBACK_DAYS` (used only if explicit dates are not set)
+- `SUNPASS_TRANSPONDERS_URL` (optional override, default is the SunPass tags-and-vehicles page)
 
 ## Notes
 
-- Current form selectors include:
+- Current transaction form selectors include:
   - username: `#tt_username`
   - password: `#tt_loginPassword`
   - date range: `#startDateAll1`, `#endDateAll1`
   - submit: `button[name="btnView"]`
-- The script prints timestamped progress logs.
-- If zero rows are found, debug HTML is saved to `tmp/last_transactions_page.html`.
+- The CLI prints JSON to stdout.
+- If zero rows are found, debug HTML is saved to `tmp/last_transactions_page.html` or `tmp/last_transponders_page.html`.
