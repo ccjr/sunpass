@@ -9,9 +9,14 @@ Gem::Specification.new do |spec|
   spec.summary = 'Fetch SunPass transactions and transponders through the web UI'
   spec.description = 'Automates SunPass UI login and extracts transaction and transponder data into Ruby objects.'
   spec.license = 'MIT'
+  spec.homepage = 'https://github.com/ccjr/sunpass'
   spec.required_ruby_version = '>= 4.0'
+  spec.metadata = {
+    'source_code_uri' => 'https://github.com/ccjr/sunpass',
+    'changelog_uri' => 'https://github.com/ccjr/sunpass/blob/main/CHANGELOG.md'
+  }
 
-  spec.files = Dir.glob('{lib,bin}/**/*').select { |f| File.file?(f) } + %w[sunpass.gemspec README.md]
+  spec.files = Dir.glob('{lib,bin}/**/*').select { |f| File.file?(f) } + %w[sunpass.gemspec README.md CHANGELOG.md]
   spec.bindir = 'bin'
   spec.executables = ['fetch_transactions']
   spec.require_paths = ['lib']
