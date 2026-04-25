@@ -48,6 +48,26 @@ Because it depends on page structure, form behavior, and browser automation, it 
    bundle exec ruby bin/fetch_transactions
    ```
 
+## Running Tests
+
+Install the bundle first:
+
+```bash
+bundle install
+```
+
+Run the full Minitest suite with:
+
+```bash
+bundle exec ruby -Itest -e 'Dir["test/*_test.rb"].sort.each { |file| require_relative file }'
+```
+
+Run a single test file by passing the file directly:
+
+```bash
+bundle exec ruby -Itest test/transaction_parser_test.rb
+```
+
 ## Use From Another Project
 
 Add this to the other project's `Gemfile`:

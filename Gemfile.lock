@@ -18,6 +18,7 @@ GEM
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2026.0203)
+    minitest (5.27.0)
     playwright-ruby-client (1.58.0)
       base64
       concurrent-ruby (>= 1.1.6)
@@ -28,6 +29,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  minitest (~> 5.25)
   sunpass!
 
 CHECKSUMS
@@ -38,6 +40,7 @@ CHECKSUMS
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
   mime-types-data (3.2026.0203) sha256=54353d693af028847391c28361c07d4b8b689cad78c3e1cc272fb1205c6d2a2f
+  minitest (5.27.0) sha256=2d3b17f8a36fe7801c1adcffdbc38233b938eb0b4966e97a6739055a45fa77d5
   playwright-ruby-client (1.58.0) sha256=d78b6acfb2c7bea19394366f8fc840a8518b0dbfb07d8c63754cb21d9eda0277
   sunpass (0.1.0)
 
