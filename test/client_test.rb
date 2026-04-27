@@ -102,4 +102,23 @@ class ClientTest < Minitest::Test
     assert_equal [['row text']], parser.parse_rows_calls
     assert_empty parser.parse_records_calls
   end
+
+  def test_fetch_transponders_falls_back_to_raw_rows_when_structured_parse_is_empty
+    parser = ParserDouble.new(parse_records_result: [], parse_rows_result: [:fallback])
+
+    client = Sunpass::Client.new(
+      username: 'user',
+      password: 'pass',
+      transponder_parser: parser,
+      logger: ->(*) {}
+    )
+
+    records = [{ 'serial_number' => 'Transponder Number' }]
+    client.define_singleton_method(:fetch_transponder_records) { |transponders_url: nil| records }
+    client.define_singleton_method(:fetch_transponder_rows) { |transponders_url: nil| ['Transponder 167709831010 Status Active'] }
+
+    assert_equal [:fallback], client.fetch_transponders
+    assert_equal [records], parser.parse_records_calls
+    assert_equal [['Transponder 167709831010 Status Active']], parser.parse_rows_calls
+  end
 end

@@ -45,11 +45,11 @@ module Sunpass
     end
 
     def parse_record(record)
-      serial_number = clean_value(record[:serial_number])
-      transponder_type = clean_value(record[:transponder_type])
-      plate_number = clean_value(record[:plate_number])
-      friendly_name = clean_value(record[:friendly_name])
-      status = clean_value(record[:status])&.capitalize
+      serial_number = clean_value(record_value(record, :serial_number))
+      transponder_type = clean_value(record_value(record, :transponder_type))
+      plate_number = clean_value(record_value(record, :plate_number))
+      friendly_name = clean_value(record_value(record, :friendly_name))
+      status = clean_value(record_value(record, :status))&.capitalize
       raw_text = [
         serial_number,
         transponder_type,
@@ -127,6 +127,10 @@ module Sunpass
     def clean_value(value)
       normalized = value.to_s.gsub(/\s+/, ' ').strip
       normalized.empty? ? nil : normalized
+    end
+
+    def record_value(record, key)
+      record[key] || record[key.to_s]
     end
 
     def header_value?(value)

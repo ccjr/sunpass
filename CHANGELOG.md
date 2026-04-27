@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2026-04-27
+
+### Fixed
+
+- Parse structured transponder records returned from Playwright with string keys.
+- Fall back to raw transponder row parsing when structured rows are present but do not parse into transponder objects.
+
 ## [0.1.0] - 2026-04-25
 
 Initial release.
@@ -16,4 +23,5 @@ Initial release.
 - Parsers for normalized transaction and transponder rows.
 - Minitest coverage for models, parsers, client extraction helpers, and Playwright compatibility.
 
+[0.1.1]: https://github.com/ccjr/sunpass/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ccjr/sunpass/releases/tag/v0.1.0

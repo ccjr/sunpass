@@ -112,7 +112,10 @@ module Sunpass
 
     def fetch_transponders(transponders_url: @transponders_url)
       records = fetch_transponder_records(transponders_url: transponders_url)
-      return @transponder_parser.parse_records(records) unless records.empty?
+      unless records.empty?
+        transponders = @transponder_parser.parse_records(records)
+        return transponders unless transponders.empty?
+      end
 
       raw_rows = fetch_transponder_rows(transponders_url: transponders_url)
       @transponder_parser.parse_rows(raw_rows)
