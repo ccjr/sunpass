@@ -121,4 +121,32 @@ class ClientTest < Minitest::Test
     assert_equal [records], parser.parse_records_calls
     assert_equal [['Transponder 167709831010 Status Active']], parser.parse_rows_calls
   end
+
+  def test_login_forces_the_known_submit_button_when_it_is_not_clickable
+    forced_clicks = 0
+    button = Object.new
+    button.define_singleton_method(:click) do |force:, timeout:|
+      forced_clicks += 1 if force && timeout == 2_000
+    end
+    locator = Object.new
+    locator.define_singleton_method(:first) { button }
+    page = Object.new
+    page.define_singleton_method(:goto) { |_url| }
+    page.define_singleton_method(:wait_for_timeout) { |_milliseconds| }
+    page.define_singleton_method(:wait_for_load_state) { |state:| raise unless state == 'networkidle' }
+    page.define_singleton_method(:locator) do |selector|
+      raise "unexpected selector: #{selector}" unless selector == 'button[name="btnLogin"]'
+
+      locator
+    end
+
+    @client.define_singleton_method(:fill_first_match) { |_page, _selectors, _value| }
+    @client.define_singleton_method(:click_first_match) do |_page, selectors|
+      raise "Could not find clickable element for any selector: #{selectors.inspect}"
+    end
+
+    @client.send(:login, page)
+
+    assert_equal 1, forced_clicks
+  end
 end

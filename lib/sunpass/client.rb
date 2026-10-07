@@ -19,7 +19,10 @@ module Sunpass
       '#tt_loginPassword1'
     ].freeze
 
+    LOGIN_BUTTON_SELECTOR = 'button[name="btnLogin"]'
+
     LOGIN_BUTTON_SELECTORS = [
+      LOGIN_BUTTON_SELECTOR,
       'button:has-text("Log In")',
       'button:has-text("Login")',
       'input[value*="Login"]',
@@ -174,12 +177,18 @@ module Sunpass
       log('Filling password')
       fill_first_match(page, PASSWORD_SELECTORS, @password)
       log('Submitting login form')
-      click_first_match(page, LOGIN_BUTTON_SELECTORS)
+      submit_login_form(page)
 
       # Let post-login redirects settle.
       page.wait_for_load_state(state: 'networkidle')
       page.wait_for_timeout(2000)
       log('Login flow completed')
+    end
+
+    def submit_login_form(page)
+      click_first_match(page, LOGIN_BUTTON_SELECTORS)
+    rescue RuntimeError
+      page.locator(LOGIN_BUTTON_SELECTOR).first.click(force: true, timeout: 2_000)
     end
 
     def open_transactions(page, lookback_days:, from_date: nil, to_date: nil)
